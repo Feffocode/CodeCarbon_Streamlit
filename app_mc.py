@@ -12,6 +12,7 @@ Funzionalità:
 """
 
 import os
+from typing import Optional, List
 import streamlit as st
 import pandas as pd
 from PyPDF2 import PdfReader
@@ -104,7 +105,7 @@ def extract_text_from_pdf(pdf_file) -> str:
     return text
 
 
-def split_text_into_chunks(text: str, size: int, overlap: int) -> list[str]:
+def split_text_into_chunks(text: str, size: int, overlap: int) -> List[str]:
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=size,
         chunk_overlap=overlap,
@@ -123,7 +124,7 @@ def get_embedding_model():
     )
 
 
-def create_vector_store(chunks: list[str], embeddings) -> Chroma:
+def create_vector_store(chunks: List[str], embeddings) -> Chroma:
     return Chroma.from_texts(
         texts=chunks,
         embedding=embeddings,
@@ -153,7 +154,7 @@ def make_tracker(project_name: str) -> OfflineEmissionsTracker:
     )
 
 
-def load_emissions_df() -> pd.DataFrame | None:
+def load_emissions_df() -> Optional[pd.DataFrame]:
     """Legge il CSV di CodeCarbon; ritorna None se assente o vuoto."""
     if not os.path.isfile(EMISSIONS_PATH):
         return None
